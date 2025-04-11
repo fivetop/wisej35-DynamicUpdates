@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net48;net8.0-android;net8.0-ios;net8.0-windows10.0.19041.0</TargetFrameworks>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <EmbeddedResourceUseDependentUponConvention>true</EmbeddedResourceUseDependentUponConvention>
+    <RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace("-", "_"))</RootNamespace>
+	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	<NoWarn>CA1416</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))'=='net'">
+	<Reference Include="Microsoft.CSharp" />
+	<Reference Include="System.Windows.Forms">
+	  <Aliases>swf</Aliases>
+	</Reference>
+	<Reference Include="System.Data.DataSetExtensions" />
+  </ItemGroup>
+
+  <ItemGroup>  
+    <PackageReference Include="EmbedIO" Version="3.5.2" />
+    <PackageReference Include="Wisej-3" Version="3.5.17" />
+    <PackageReference Include="Wisej-3-Hybrid" Version="3.5.17" />
+    <PackageReference Include="Wisej-3-ProgressCircle" Version="3.5.17">
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Page1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="REM Delete the existing Dist folder and all its contents&#xD;&#xA;rmdir /S /Q &quot;$(SolutionDir)HybridRemote\Dist\$(TargetFramework)\&quot;&#xD;&#xA;&#xD;&#xA;REM Recreate the Dist folder&#xD;&#xA;mkdir &quot;$(SolutionDir)HybridRemote\Dist\$(TargetFramework)\&quot;&#xD;&#xA;&#xD;&#xA;REM Copy all DLL files from the target directory to the Dist folder&#xD;&#xA;xcopy /Y /E &quot;$(TargetDir)*.dll&quot; &quot;$(SolutionDir)HybridRemote\Dist\$(TargetFramework)\&quot;&#xD;&#xA;" />
+  </Target>
+
+</Project>
